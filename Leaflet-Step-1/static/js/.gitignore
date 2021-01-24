@@ -6,6 +6,7 @@
 ######################
 config.py
 api_keys.py
+config.js
 
 
 .ipyng_checkpoints
