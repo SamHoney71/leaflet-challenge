@@ -47,7 +47,7 @@ d3.json(url, function(data) {
         var lat = earthquake_loc.coordinates[1];
         // // console.log(lat);
         var depth = earthquake_loc.coordinates[2];
-        // // console.log(depth);
+        console.log(depth);
 
         // variables for earthquake properties
         var earthquake_prop = features[i].properties;
@@ -57,21 +57,37 @@ d3.json(url, function(data) {
         var place = earthquake_prop.place;
         // console.log(place)
 
+        // Conditional for depth colors
+        var color = "";
+        if (earthquake_loc.coordinates[2] > 90) {
+            color = "Red";
+        }
+        else if (earthquake_loc.coordinates[2] > 70) {
+            color = "Orange";
+        }
+        else if (earthquake_loc.coordinates[2] > 50) {
+            color = "red";
+        }
+        else if (earthquake_loc.coordinates[2] > 30) {
+            color = "yellow";
+        }
+        else {
+            color = "green;"
+        }
+
+
         // Adds markers & pop ups
         if (earthquake_loc) {
-            markers.addLayer(L.marker([earthquake_loc.coordinates[1], earthquake_loc.coordinates[0]])
-                .bindPopup("<h1>Magnitude: " + magnitude +"</h1> <hr> <h3> Location: " + place + "</h3><hr><h3> Depth: "+ depth + "</h3>"));
+            markers.addLayer(L.circle([earthquake_loc.coordinates[1], earthquake_loc.coordinates[0]], {
+                fillOpacity:0.25,
+                color: "white",
+                fillColor: color,
+                //adjust radius
+                radius: magnitude * 500
+            }).bindPopup("<h1>Magnitude: " + magnitude +"</h1> <hr> <h3> Location: " + place + "</h3><hr><h3> Depth: "+ depth + "</h3>"));
         }
         
-        // // Add color to represent depth of quake
-        // function getColor(d) {
-        //     return d > 90 ?'#800026':
-        //         d > 70 ?'#color':
-        //         d > 50 ?'# ':
-        //         d > 30 ?'# ':
-        //         d > 10 ?'# ':
-        //             '#FFEDAO';
-        // }
+       
     }
 
 //Add marker cluster layer to the map
