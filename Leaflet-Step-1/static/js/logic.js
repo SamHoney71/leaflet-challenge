@@ -1,7 +1,7 @@
 // Create a map object
 var myMap = L.map("mapid", {
-    center: [15.5994, -28.6731],
-    zoom: 3
+    center: [18.5994, -5.6731],
+    zoom: 2.5
   });
  
   
@@ -24,10 +24,8 @@ var url = baseURL + limit;
 console.log(url);
 
 //Grab data with D3
-
 d3.json(url, function(data) {
     // console.log(data);
-    //console.log(data.features)
    
     // pull out 'features' in Json
     var features = data.features;
@@ -44,14 +42,14 @@ d3.json(url, function(data) {
         var earthquake_loc = features[i].geometry;
             
         // // set variable for lat, long, depth
-        // var lng = earthquake_loc.coordinates[0];
+        var lng = earthquake_loc.coordinates[0];
         // // console.log(lng);
-        // var lat = earthquake_loc.coordinates[1];
+        var lat = earthquake_loc.coordinates[1];
         // // console.log(lat);
-        // var depth = earthquake_loc.coordinates[2];
+        var depth = earthquake_loc.coordinates[2];
         // // console.log(depth);
 
-        // variables for popups
+        // variables for earthquake properties
         var earthquake_prop = features[i].properties;
         // console.log(earthquake_prop);
         var magnitude = earthquake_prop.mag;
@@ -59,15 +57,23 @@ d3.json(url, function(data) {
         var place = earthquake_prop.place;
         // console.log(place)
 
-
+        // Adds markers & pop ups
         if (earthquake_loc) {
             markers.addLayer(L.marker([earthquake_loc.coordinates[1], earthquake_loc.coordinates[0]])
-                .bindPopup("<h1>Magnitude: " + magnitude +"</h1> <hr> <h3> Location: " + place + "</h3>"));
+                .bindPopup("<h1>Magnitude: " + magnitude +"</h1> <hr> <h3> Location: " + place + "</h3><hr><h3> Depth: "+ depth + "</h3>"));
         }
         
+        // // Add color to represent depth of quake
+        // function getColor(d) {
+        //     return d > 90 ?'#800026':
+        //         d > 70 ?'#color':
+        //         d > 50 ?'# ':
+        //         d > 30 ?'# ':
+        //         d > 10 ?'# ':
+        //             '#FFEDAO';
+        // }
     }
 
 //Add marker cluster layer to the map
 myMap.addLayer(markers);
-
 });
