@@ -17,7 +17,7 @@ L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
  
 //Store API query variables with 1000 limit 
 var baseURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson?";
-var limit = "&$limit=1000";
+var limit = "&$limit=100";
 
 //Assemble API query URL
 var url = baseURL + limit;
@@ -26,22 +26,40 @@ console.log(url);
 //Grab data with D3
 
 d3.json(url, function(data) {
+    // console.log(data);
+    //console.log(data.features)
+   
+    // pull out 'features' in Json
+    var features = data.features;
+    // console.log(features)
 
     // Create marker cluster group
     var markers = L.markerClusterGroup();
+    // console.log(markers)
 
     //loop through data
-    for (var i = 0; i< data.length; i++) {
+    for (var i = 0; i< features.length; i++) {
 
         //Set earthquake location to a variable
-        var earthquake_loc = data[i].features.geometry;
+        var earthquake_loc = features[i].geometry;
+            
+        // // set variable for lat, long, depth
+        // var lng = earthquake_loc.coordinates[0];
+        // // console.log(lng);
+        // var lat = earthquake_loc.coordinates[1];
+        // // console.log(lat);
+        // var depth = earthquake_loc.coordinates[2];
+        // // console.log(depth);
+
 
         if (earthquake_loc) {
-            markers.addLayer(L.circle([earthquake_loc.coordinates[0], earthquake_loc.coordinates[1]])
-                .bindPopup(data[i].features.property.mag));
+            markers.addLayer(L.marker([earthquake_loc.coordinates[1], earthquake_loc.coordinates[0]])
+                .bindPopup(earthquake_loc.coordinates[2]));
         }
+        
     }
 
-    //Add marker cluster layer to the map
+//Add marker cluster layer to the map
+myMap.addLayer(markers);
 
 });
