@@ -31,7 +31,7 @@ d3.json(url, function(data) {
     var features = data.features;
     // console.log(features)
 
-    // Create marker cluster group
+    // Create marker cluster group - need to get rid of clusters
     var markers = L.markerClusterGroup();
     // console.log(markers)
 
@@ -83,7 +83,7 @@ d3.json(url, function(data) {
                 color: "white",
                 fillColor: color,
                 //adjust radius
-                radius: magnitude * 500
+                radius: earthquake_prop.mag * 1500
             }).bindPopup("<h1>Magnitude: " + magnitude +"</h1> <hr> <h3> Location: " + place + "</h3><hr><h3> Depth: "+ depth + "</h3>"));
         }
         
