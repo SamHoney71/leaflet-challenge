@@ -1,7 +1,7 @@
 // Create a map object
 var myMap = L.map("mapid", {
     center: [18.5994, -5.6731],
-    zoom: 2.5
+    zoom: 2.4
   });
  
   
@@ -16,8 +16,8 @@ L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 }).addTo(myMap);
  
 //Store API query variables with 10000 limit 
-var baseURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson?";
-var limit = "&$limit=10000";
+var baseURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson?";
+var limit = "&$limit=100000";
 
 //Assemble API query URL
 var url = baseURL + limit;
@@ -59,20 +59,23 @@ d3.json(url, function(data) {
 
         // Conditional for depth colors
         var color = "";
-        if (earthquake_loc.coordinates[2] > 90) {
-            color = "Red";
+        if (features[i].geometry.coordinates[2] > 90) {
+            color = "rgb(255, 0, 0)";
         }
-        else if (earthquake_loc.coordinates[2] > 70) {
-            color = "Orange";
+        else if (features[i].geometry.coordinates[2] > 70) {
+            color = "rgb(255, 128, 0)";
         }
-        else if (earthquake_loc.coordinates[2] > 50) {
-            color = "red";
+        else if (features[i].geometry.coordinates[2] > 50) {
+            color = "rgb(255, 191, 0)";
         }
-        else if (earthquake_loc.coordinates[2] > 30) {
-            color = "yellow";
+        else if (features[i].geometry.coordinates[2] > 30) {
+            color = "rgb(191, 255,0)";
+        }
+        else if (features[i].geometry.coordinates[2] > 10) {
+            color = "rgb(64, 255, 0)"
         }
         else {
-            color = "green;"
+            color = "rgb(0, 255, 64)"
         }
 
 
@@ -92,4 +95,38 @@ d3.json(url, function(data) {
 
 //Add marker cluster layer to the map
 myMap.addLayer(markers);
+
+
+
+    // Create function for colors on the legend 
+    //Acknowledge:  Andrew Perez helped me with this function for the legend
+    function getColor(d) {
+        var color = (
+            (d >= 90) ? "#ff0000":
+            (d >= 70) ? "#ff8000":
+            (d >= 50) ? "#ffbf00":
+            (d >= 30) ? "#bfff00":
+            (d >= 10) ? "#40ff00":
+            "#00ff40"
+        );
+        return color;
+    }
+  
+    // add legend to map
+    // Acknowledge:  Andrew Perez helped me with the legend
+    var legend = L.control({position: "bottomright"});
+    legend.onAdd = function(myMap) {
+        var legend_div = L.DomUtil.create('div', 'legend box');
+
+        categories = [0, 10, 30, 50, 70, 90];
+        
+        for (var i=0; i < categories.length; i++) {
+            legend_div.innerHTML +=
+                '<i style="background:' + getColor(categories[i] + 1) + '"></i> ' + categories[i] + (categories[i + 1] ? '&ndash;' + categories[i + 1] + '<br>': '+');
+        }       
+        return legend_div; 
+    };
+    legend.addTo(myMap);
+
+
 });

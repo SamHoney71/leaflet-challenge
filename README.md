@@ -11,7 +11,7 @@
 <p></p>
 
 <ul>Leaflet Step 2</ul>
-<li> Cluster markers to show count of earthquakes within an area</li>
+<li> Created cluster markers to show count of earthquakes within an area</li>
 <li> Diameter is magnitude </li>
 <li> Color is depth of earthquake </li>
 
