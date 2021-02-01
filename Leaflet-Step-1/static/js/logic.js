@@ -1,7 +1,7 @@
 // Create a map object
 var myMap = L.map("mapid", {
     center: [18.5994, -5.6731],
-    zoom: 2.5
+    zoom: 2.4
   });
  
   
@@ -64,10 +64,37 @@ d3.json(url, function createMarkers(data) {
         .bindPopup("<h1>Magnitude: " + features[i].properties.mag +"</h1> <hr> <h3> Location: " + features[i].properties.place + "</h3><hr><h3> Depth: "+ features[i].geometry.coordinates[2] + "</h3>")
         .addTo(myMap);
     };
-    console.log(earthquake_loc.coordinates[1])
+    console.log(earthquake_loc.coordinates[1]);
 
 
+
+    // function for Colors for Legend
+    function getColor(depth) {
+        var color = (
+            (depth >= 90) ? "#ff0000":
+            (depth >= 70) ? "#ff8000":
+            (depth >= 50) ? "#ffbf00":
+            (depth >= 30) ? "#bfff00":
+            (depth >= 10) ? "#40ff00":
+            "#00ff40"
+        );
+        return color;
+    }
+  
+    // add legend to map
+    var legend = L.control({position: "bottomright"});
+    legend.onAdd = function(myMap) {
+        var legend_div = L.DomUtil.create('div', 'legend box');
+
+        labels = ['<strong>Earthquake Depth</strong>'],
+        categories = [0, 10, 30, 50, 70, 90];
+        
+        for (var i=0; i < categories.length; i++) {
+            legend_div.innerHTML +=
+                '<i style="background:' + getColor(categories[i] + 1) + '"></i> ' + categories[i] + (categories[i + 1] ? '&ndash;' + categories[i + 1] + '<br>': '+');
+        }       
+        return legend_div; 
+    };
+    legend.addTo(myMap);
 });
-
-
 
