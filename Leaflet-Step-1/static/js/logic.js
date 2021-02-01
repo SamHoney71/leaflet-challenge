@@ -23,11 +23,10 @@ var limit = "&$limit=100000";
 var url = baseURL + limit;
 console.log(url);
 
-
+// Creates circles on the map : radious-magnitude and color-depth 
 d3.json(url, function createMarkers(data) {
     
     var features = data.features;
-
 
     for (var i = 0; i<features.length; i++) {
 
@@ -67,26 +66,26 @@ d3.json(url, function createMarkers(data) {
     console.log(earthquake_loc.coordinates[1]);
 
 
-
-    // function for Colors for Legend
-    function getColor(depth) {
+    // Create function for colors on the legend 
+    //Acknowledge:  Andrew Perez helped me with this function for the legend
+    function getColor(d) {
         var color = (
-            (depth >= 90) ? "#ff0000":
-            (depth >= 70) ? "#ff8000":
-            (depth >= 50) ? "#ffbf00":
-            (depth >= 30) ? "#bfff00":
-            (depth >= 10) ? "#40ff00":
+            (d >= 90) ? "#ff0000":
+            (d >= 70) ? "#ff8000":
+            (d >= 50) ? "#ffbf00":
+            (d >= 30) ? "#bfff00":
+            (d >= 10) ? "#40ff00":
             "#00ff40"
         );
         return color;
     }
   
     // add legend to map
+    // Acknowledge:  Andrew Perez helped me with the legend
     var legend = L.control({position: "bottomright"});
     legend.onAdd = function(myMap) {
         var legend_div = L.DomUtil.create('div', 'legend box');
 
-        labels = ['<strong>Earthquake Depth</strong>'],
         categories = [0, 10, 30, 50, 70, 90];
         
         for (var i=0; i < categories.length; i++) {
